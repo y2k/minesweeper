@@ -63,21 +63,22 @@
 ;; View
 
 (defn view [state]
-  (concat
-   [:div {:style (str "height: 100%; display: grid; grid-template-columns: repeat(" FIELD_WIDTH ", 1fr); grid-template-rows: repeat(" FIELD_WIDTH ", 1fr); gap: 10px;")}]
-   (.map state.field
-         (fn [x i]
-           [:div {:style (str "display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "#30c9bc" "white"))
-                  :onclick (str "dispatch(event, \"clicked\", " i ")")}
-            [:div {:style "font-size: 6vw; color: #999;"}
-             (if (or (= x -1) (= x -2) (= x 0)) ""
-                 (if (= x -3) "💣"
-                     (if (or (= x -4) (= x -5)) "🚩" (str x))))]
-            (if (or (= x -1) (= x -2))
-              [:div {:style (str "font-size: 3vw; border-radius: 1vw; background-color: #11111108; display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 0px; width: 50%; height: 50%; cursor: default;")
-                     :onclick (str "dispatch(event, \"mini_flag_clicked\", " i ")")}
-               "❌"]
-              [:div])]))))
+  [:div {:style "width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"}
+   (concat
+    [:div {:style (str "width: 100vmin; height: 100vmin; display: grid; grid-template-columns: repeat(" FIELD_WIDTH ", 1fr); grid-template-rows: repeat(" FIELD_WIDTH ", 1fr); gap: 10px;")}]
+    (.map state.field
+          (fn [x i]
+            [:div {:style (str "display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "#30c9bc" "white"))
+                   :onclick (str "dispatch(event, \"clicked\", " i ")")}
+             [:div {:style "font-size: 6vw; color: #999;"}
+              (if (or (= x -1) (= x -2) (= x 0)) ""
+                  (if (= x -3) "💣"
+                      (if (or (= x -4) (= x -5)) "🚩" (str x))))]
+             (if (or (= x -1) (= x -2))
+               [:div {:style (str "font-size: 3vw; border-radius: 1vw; background-color: #11111108; display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 0px; width: 50%; height: 50%; cursor: default;")
+                      :onclick (str "dispatch(event, \"mini_flag_clicked\", " i ")")}
+                "❌"]
+               [:div])])))])
 
 ;; Infrastructure
 
