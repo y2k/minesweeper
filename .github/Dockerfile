@@ -15,3 +15,5 @@ RUN ls -la .github/bin
 FROM scratch
 
 COPY --from=build /app/.github/bin /build_result
+
+CMD [ "" ]
