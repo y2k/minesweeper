@@ -65,7 +65,7 @@
 (defn view [state]
   [:div {:style "width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"}
    (concat
-    [:div {:style (str "width: 100vmin; height: 100vmin; display: grid; grid-template-columns: repeat(" FIELD_WIDTH ", 1fr); grid-template-rows: repeat(" FIELD_WIDTH ", 1fr); gap: 4px;")}]
+    [:div {:style (str "width: 100vmin; height: 100vmin; display: grid; grid-template-columns: repeat(" FIELD_WIDTH ", 1fr); grid-template-rows: repeat(" FIELD_WIDTH ", 1fr); gap: 2px;")}]
     (.map state.field
           (fn [x i]
             [:div {:style (str "display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "#30c9bc" "white"))
