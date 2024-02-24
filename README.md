@@ -1,3 +1,3 @@
 # Игра "Сапер"
 
-[Powered by](https://github.com/y2k/language)
+[Powered by clj2js](https://github.com/y2k/language)
