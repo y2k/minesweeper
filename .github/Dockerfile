@@ -5,7 +5,7 @@ WORKDIR /app
 COPY --from=y2khub/clj2js /app/clj2js .
 
 COPY src/ src
-COPY test/ test
+# COPY test/ test
 COPY .github/ .github
 
 RUN export PATH=$PATH:/app && cd .github && make
