@@ -2,21 +2,16 @@ FROM node:20-bullseye AS build
 
 WORKDIR /app
 
-COPY src/ .
+COPY --from=y2khub/clj2js /app/clj2js .
 
-RUN ls  -la
+COPY src/ src
+COPY test/ test
+COPY .github/ .github
 
-# COPY project.clj .
-# RUN lein do install, test
+RUN export PATH=$PATH:/app && cd .github && make
 
-# COPY src src
-# COPY test test
+RUN ls -la .github/bin
 
-# RUN lein test
-# RUN lein cljsbuild once min
+FROM scratch
 
-# COPY resources resources
-
-# FROM alpine
-
-# COPY --from=build /app/resources/public /build_result
+COPY --from=build /app/.github/bin /build_result
