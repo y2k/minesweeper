@@ -69,30 +69,26 @@
     (.map state.field
           (fn [x i]
             [:div {:style (str "display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "var(--color-tile)" "var(--color-tile-opened)"))
-                   :onclick (str "dispatch(event, \"clicked\", " i ")")}
+                   :onclick (str "dispatch(event, \"clicked\", " i ")")
+                   :oncontextmenu (str "dispatch(event, \"oncontextmenu\", " i ")")}
              [:div {:style "font-size: 6vw; color: var(--color-text);"}
               (if (or (= x -1) (= x -2) (= x 0)) ""
                   (if (= x -3) "💣"
-                      (if (or (= x -4) (= x -5)) "🚩" (str x))))]
-             (if (or (= x -1) (= x -2))
-               [:div {:style (str "font-size: 3vw; border-radius: 1vw; background-color: #11111108; display: flex; align-items: center; justify-content: center; position: absolute; left: 0px; top: 0px; width: 50%; height: 50%; cursor: default;")
-                      :onclick (str "dispatch(event, \"mini_flag_clicked\", " i ")")}
-                "❌"]
-               [:div])])))])
+                      (if (or (= x -4) (= x -5)) "🚩" (str x))))]])))])
 
 ;; Infrastructure
 
 (^export def state (atom {:field (u/unfold 0 (fn [_ i] (if (< i FIELD_SIZE) [-1 0] null)))}))
 
 (defn dispatch [e action payload]
-  (if (= null e) null (.stopPropagation e))
+  (if (= null e) null (.preventDefault e))
   (reset state
          (case action
            :loaded (do
                      (set! (.-dispatch window) dispatch)
                      (loaded {:now (Date/now) :db (deref state)}))
            :clicked (clicked {:db (deref state)} payload)
-           :mini_flag_clicked (mini_flag_clicked {:db (deref state)} payload)
+           :oncontextmenu (mini_flag_clicked {:db (deref state)} payload)
            (deref state)))
   (set! (.-innerHTML (.querySelector document "#container"))
         (u/html_to_string (view (deref state)))))
