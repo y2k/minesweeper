@@ -75,7 +75,7 @@
                   (if (= x -3) "💣"
                       (if (or (= x -4) (= x -5)) "🚩" (str x))))]
              (if (or (= x -1) (= x -2))
-               [:div {:style (str "font-size: 3vw; border-radius: 1vw; background-color: #11111108; display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 0px; width: 50%; height: 50%; cursor: default;")
+               [:div {:style (str "font-size: 3vw; border-radius: 1vw; background-color: #11111108; display: flex; align-items: center; justify-content: center; position: absolute; left: 0px; top: 0px; width: 50%; height: 50%; cursor: default;")
                       :onclick (str "dispatch(event, \"mini_flag_clicked\", " i ")")}
                 "❌"]
                [:div])])))])
