@@ -8,16 +8,31 @@
 ;; -5    : флажок поверх пустого места
 ;; 0 - 8 : открытое пустое пространство
 
+(def BOMB_COUNT 7)
 (def FIELD_WIDTH 6)
 (def FIELD_SIZE (* FIELD_WIDTH FIELD_WIDTH))
 
+(defn- make_bomb_indecies [seed]
+  (defn- loop [xs]
+    (defn- find_free_index [i]
+      (if (.includes xs i) (find_free_index (% (+ i 1) FIELD_SIZE)) i))
+    (if (>= xs.length BOMB_COUNT) xs
+        (let [prev (.at xs -1)
+              next (find_free_index (% (+ prev (Math/floor (* (- FIELD_SIZE xs.length) (u/random (/ prev FIELD_SIZE))))) FIELD_SIZE))]
+          (.push xs next)
+          (loop xs))))
+  (loop [(Math/floor (* FIELD_SIZE (u/random seed)))]))
+
 (defn- loaded [cofx]
   (let [x (/ cofx.now 1000)
-        seed (- x (Math/floor x))]
+        seed (- x (Math/floor x))
+        bomb_indecies (make_bomb_indecies seed)]
     {:field
      (u/unfold seed
-               (fn [prev i]
-                 (if (< i FIELD_SIZE) (let [r (u/random prev)] [(if (> (* 5 r) 1) -1 -2) r]) null)))}))
+               (fn [_ i]
+                 (if (< i FIELD_SIZE)
+                   [(if (.includes bomb_indecies i) -2 -1) 0]
+                   null)))}))
 
 (defn- get_at [field index dx dy]
   (let [x (+ dx (% index FIELD_WIDTH))
