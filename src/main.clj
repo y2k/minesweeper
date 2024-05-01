@@ -1,4 +1,4 @@
-(ns main (:require [utils :as u]))
+(ns main (:require ["./common/utils" :as u]))
 ;; Domain
 
 ;; -1    : неизвестно
@@ -18,14 +18,14 @@
       (if (.includes xs i) (find_free_index (% (+ i 1) FIELD_SIZE)) i))
     (if (>= xs.length BOMB_COUNT) xs
         (let [prev (.at xs -1)
-              next (find_free_index (% (+ prev (Math/floor (* (- FIELD_SIZE xs.length) (u/random (/ prev FIELD_SIZE))))) FIELD_SIZE))]
+              next (find_free_index (% (+ prev (Math.floor (* (- FIELD_SIZE xs.length) (u/random (/ prev FIELD_SIZE))))) FIELD_SIZE))]
           (.push xs next)
           (loop xs))))
-  (loop [(Math/floor (* FIELD_SIZE (u/random seed)))]))
+  (loop [(Math.floor (* FIELD_SIZE (u/random seed)))]))
 
 (defn- loaded [cofx]
   (let [x (/ cofx.now 1000)
-        seed (- x (Math/floor x))
+        seed (- x (Math.floor x))
         bomb_indecies (make_bomb_indecies seed)]
     {:field
      (u/unfold seed
@@ -36,7 +36,7 @@
 
 (defn- get_at [field index dx dy]
   (let [x (+ dx (% index FIELD_WIDTH))
-        y (+ dy (Math/floor (/ index FIELD_WIDTH)))]
+        y (+ dy (Math.floor (/ index FIELD_WIDTH)))]
     (if (or (< x 0) (< y 0) (>= x FIELD_WIDTH) (>= y FIELD_WIDTH))
       null
       (get field (+ x (* y FIELD_WIDTH))))))
@@ -66,14 +66,17 @@
     -2 (do (alert "Game over!")
            (assoc cofx.db :field (.map cofx.db.field (fn [x] (if (= x -2) -3 x)))))
     -1 (assoc cofx.db :field (open_cell cofx.db.field index))
-    -5 (assoc cofx.db :field (.map cofx.db.field (fn [x i] (if (= i index) -1 x))))
-    -4 (assoc cofx.db :field (.map cofx.db.field (fn [x i] (if (= i index) -2 x))))
     cofx.db))
 
 (defn- mini_flag_clicked [cofx index]
+  (defn- update [v]
+    (assoc cofx.db :field (.map cofx.db.field (fn [x i] (if (= i index) v x)))))
   (case (.at cofx.db.field index)
-    -2 (assoc cofx.db :field (.map cofx.db.field (fn [x i] (if (= i index) -4 x))))
-    (assoc cofx.db :field (.map cofx.db.field (fn [x i] (if (= i index) -5 x))))))
+    -1 (update -5)
+    -5 (update -1)
+    -2 (update -4)
+    -4 (update -2)
+    cofx.db))
 
 ;; View
 
@@ -83,7 +86,7 @@
     [:div {:style (str "width: 100vmin; height: 100vmin; display: grid; grid-template-columns: repeat(" FIELD_WIDTH ", 1fr); grid-template-rows: repeat(" FIELD_WIDTH ", 1fr); gap: 4px;")}]
     (.map state.field
           (fn [x i]
-            [:div {:style (str "display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "var(--color-tile)" "var(--color-tile-opened)"))
+            [:div {:style (str "overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; position: relative; cursor: default; border-radius: 1vw; background-color: " (if (or (= x -1) (= x -2) (= x -4) (= x -5)) "var(--color-tile)" "var(--color-tile-opened)"))
                    :onclick (str "dispatch(event, \"clicked\", " i ")")
                    :oncontextmenu (str "dispatch(event, \"oncontextmenu\", " i ")")}
              [:div {:style "font-size: 6vw; color: var(--color-text);"}
@@ -97,13 +100,13 @@
 
 (defn dispatch [e action payload]
   (if (= null e) null (.preventDefault e))
-  (reset state
-         (case action
-           :loaded (do
-                     (set! (.-dispatch window) dispatch)
-                     (loaded {:now (Date/now) :db (deref state)}))
-           :clicked (clicked {:db (deref state)} payload)
-           :oncontextmenu (mini_flag_clicked {:db (deref state)} payload)
-           (deref state)))
+  (reset! state
+          (case action
+            :loaded (do
+                      (set! (.-dispatch window) dispatch)
+                      (loaded {:now (Date.now) :db (deref state)}))
+            :clicked (clicked {:db (deref state)} payload)
+            :oncontextmenu (mini_flag_clicked {:db (deref state)} payload)
+            (deref state)))
   (set! (.-innerHTML (.querySelector document "#container"))
         (u/html_to_string (view (deref state)))))

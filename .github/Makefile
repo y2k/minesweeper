@@ -1,16 +1,20 @@
+PRELUDE_PATH := $(shell realpath ../vendor/prelude/js/src/prelude.clj)
+
 build: clean
-	@ mkdir bin
+	@ mkdir -p bin/src/common
 	@ echo '{"type":"module"}' > bin/package.json
-	@ clj2js prelude > bin/prelude.js
-	@ clj2js ../src/vendor/utils.clj > bin/utils.js
-	@ clj2js ../src/main.clj > bin/main.js
-	@ clj2js ../src/main.static.clj > bin/main.static.js
-	@ node bin/main.static.js > bin/index.html
+	@ clj2js js ../src/common/utils.clj $(PRELUDE_PATH) > bin/src/common/utils.js
+	@ clj2js js ../src/main.clj $(PRELUDE_PATH) > bin/src/main.js
+	@ clj2js js ../src/main.static.clj $(PRELUDE_PATH) > bin/src/main.static.js
+	@ node bin/src/main.static.js > bin/index.html
 
 clean:
-	@ rm -r bin || true
+	@ rm -rf bin
 
 deploy:
 	cd .. && docker build -f .github/Dockerfile -t y2khub/minesweeper .
 
-.PHONY: build clean deploy
+web:
+	@ cd bin && python3 -m http.server 8000
+
+.PHONY: web build clean deploy
