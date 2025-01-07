@@ -24,7 +24,7 @@
 (defn unfold [seed f]
   (defn- loop [result prev i]
     (let [pair (f prev i)]
-      (if (= pair null)
+      (if (= pair nil)
         result
         (let [x (.at pair 0)
               acc (.at pair 1)]

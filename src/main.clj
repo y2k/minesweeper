@@ -32,13 +32,13 @@
                (fn [_ i]
                  (if (< i FIELD_SIZE)
                    [(if (.includes bomb_indecies i) -2 -1) 0]
-                   null)))}))
+                   nil)))}))
 
 (defn- get_at [field index dx dy]
   (let [x (+ dx (% index FIELD_WIDTH))
         y (+ dy (Math.floor (/ index FIELD_WIDTH)))]
     (if (or (< x 0) (< y 0) (>= x FIELD_WIDTH) (>= y FIELD_WIDTH))
-      null
+      nil
       (get field (+ x (* y FIELD_WIDTH))))))
 
 (defn- compute_count [field index]
@@ -96,10 +96,10 @@
 
 ;; Infrastructure
 
-(^export def state (atom {:field (u/unfold 0 (fn [_ i] (if (< i FIELD_SIZE) [-1 0] null)))}))
+(^export def state (atom {:field (u/unfold 0 (fn [_ i] (if (< i FIELD_SIZE) [-1 0] nil)))}))
 
 (defn dispatch [e action payload]
-  (if (= null e) null (.preventDefault e))
+  (if (= nil e) nil (.preventDefault e))
   (reset! state
           (case action
             :loaded (do
