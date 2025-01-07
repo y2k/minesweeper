@@ -1,3 +1,0 @@
-[submodule "vendor/prelude"]
-	path = vendor/prelude
-	url = git@github.com:y2k/prelude.git
