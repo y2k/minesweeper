@@ -12,27 +12,35 @@
 (def FIELD_WIDTH 6)
 (def FIELD_SIZE (* FIELD_WIDTH FIELD_WIDTH))
 
-(defn- make_bomb_indecies [seed]
+(defn- make_bomb_indecies [seed init_index]
   (defn- loop [xs]
     (defn- find_free_index [i]
-      (if (.includes xs i) (find_free_index (% (+ i 1) FIELD_SIZE)) i))
-    (if (>= xs.length BOMB_COUNT) xs
-        (let [prev (.at xs -1)
-              next (find_free_index (% (+ prev (Math.floor (* (- FIELD_SIZE xs.length) (u/random (/ prev FIELD_SIZE))))) FIELD_SIZE))]
-          (.push xs next)
-          (loop xs))))
+      (if (or (.includes xs i) (= i init_index))
+        (find_free_index (% (+ i 1) FIELD_SIZE))
+        i))
+    (if (>= xs.length BOMB_COUNT)
+      xs
+      (let [prev (.at xs -1)
+            next (find_free_index
+                  (% (+ prev
+                        (Math.floor (* (- FIELD_SIZE xs.length)
+                                       (u/random (/ prev FIELD_SIZE)))))
+                     FIELD_SIZE))]
+        (.push xs next)
+        (loop xs))))
   (loop [(Math.floor (* FIELD_SIZE (u/random seed)))]))
 
-(defn- loaded [cofx]
+(defn loaded [cofx init_index]
   (let [x (/ cofx.now 1000)
         seed (- x (Math.floor x))
-        bomb_indecies (make_bomb_indecies seed)]
-    {:field
-     (u/unfold seed
-               (fn [_ i]
-                 (if (< i FIELD_SIZE)
-                   [(if (.includes bomb_indecies i) -2 -1) 0]
-                   nil)))}))
+        bomb_indecies (make_bomb_indecies seed init_index)]
+    {:initialized true
+     :field (u/unfold
+             seed
+             (fn [_ i]
+               (if (< i FIELD_SIZE)
+                 [(if (.includes bomb_indecies i) -2 -1) 0]
+                 nil)))}))
 
 (defn- get_at [field index dx dy]
   (let [x (+ dx (% index FIELD_WIDTH))
@@ -61,12 +69,13 @@
                   (compute_count field index)
                   x))))
 
-(defn- clicked [cofx index]
-  (case (.at cofx.db.field index)
-    -2 (do (alert "Game over!")
-           (assoc cofx.db :field (.map cofx.db.field (fn [x] (if (= x -2) -3 x)))))
-    -1 (assoc cofx.db :field (open_cell cofx.db.field index))
-    cofx.db))
+(defn clicked [cofx index]
+  (let [db (if cofx.db.initialized cofx.db (loaded cofx index))]
+    (case (.at db.field index)
+      -2 (do ;;(alert "Game over!")
+           (assoc db :field (.map db.field (fn [x] (if (= x -2) -3 x)))))
+      -1 (assoc db :field (open_cell db.field index))
+      db)))
 
 (defn- mini_flag_clicked [cofx index]
   (defn- update [v]
@@ -96,7 +105,11 @@
 
 ;; Infrastructure
 
-(^export def state (atom {:field (u/unfold 0 (fn [_ i] (if (< i FIELD_SIZE) [-1 0] nil)))}))
+(defn make_state []
+  {:initialized false
+   :field (u/unfold 0 (fn [_ i] (if (< i FIELD_SIZE) [-1 0] nil)))})
+
+(def- state (atom (make_state)))
 
 (defn dispatch [e action payload]
   (if (= nil e) nil (.preventDefault e))
@@ -104,8 +117,8 @@
           (case action
             :loaded (do
                       (set! (.-dispatch window) dispatch)
-                      (loaded {:now (Date.now) :db (deref state)}))
-            :clicked (clicked {:db (deref state)} payload)
+                      (deref state))
+            :clicked (clicked {:now (Date.now) :db (deref state)} payload)
             :oncontextmenu (mini_flag_clicked {:db (deref state)} payload)
             (deref state)))
   (set! (.-innerHTML (.querySelector document "#container"))

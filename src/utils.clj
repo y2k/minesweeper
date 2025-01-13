@@ -26,8 +26,7 @@
     (let [pair (f prev i)]
       (if (= pair nil)
         result
-        (let [x (.at pair 0)
-              acc (.at pair 1)]
+        (let [[x acc] pair]
           (.push result x)
           (loop result acc (+ i 1))))))
   (loop [] seed 0))

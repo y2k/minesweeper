@@ -1,5 +1,6 @@
 .PHONY: test
-test: clean build
+test: build
+	@ node .github/bin/test/test.js
 
 .PHONY: build
 build:
@@ -15,5 +16,5 @@ deploy:
 	@ docker build -f .github/Dockerfile -t y2khub/minesweeper .
 
 .PHONY: web
-web:
+web: build
 	@ cd .github/bin && python3 -m http.server 8000
