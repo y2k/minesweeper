@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - run: cd .github && make deploy
+    - run: make deploy
     - run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u y2khub --password-stdin
     - run: docker push y2khub/minesweeper

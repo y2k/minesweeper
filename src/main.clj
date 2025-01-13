@@ -1,4 +1,4 @@
-(ns main (:require ["./common/utils" :as u]))
+(ns main (:require ["./utils" :as u]))
 ;; Domain
 
 ;; -1    : неизвестно
