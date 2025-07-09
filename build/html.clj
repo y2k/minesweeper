@@ -1,4 +1,4 @@
-(ns _ (:require ["../vendor/xml/0.2.0/main" :as xml]))
+(ns _ (:require ["../.github/vendor/xml/0.2.0/main" :as xml]))
 
 (xml/to_string
  [:html
@@ -10,4 +10,4 @@
   [:body {:style "background-color: var(--color-bg); user-select: none; -webkit-user-select: none; margin: 0px;"}
    [:div {:id :container}]
    [:script {:src "src/main.js" :type :module}]
-   [:script {:type :module} "import { dispatch } from './src/main.js'; dispatch(null, \"loaded\")"]]])
+   [:script {:type :module} "import { dispatch } from './src/main.js'; dispatch(null, 'loaded')"]]])

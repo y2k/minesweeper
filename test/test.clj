@@ -1,6 +1,6 @@
 (ns _ (:require ["../src/main" :as m]
                 ["../src/utils" :as u]
-                ["../vendor/edn/main" :as edn]))
+                ["./vendor/edn/main" :as edn]))
 
 (defn- assert_equal [expected actual]
   (if (= (JSON.stringify expected) (JSON.stringify actual))

@@ -4,7 +4,8 @@ test: build
 
 .PHONY: build
 build:
-	@ export OCAMLRUNPARAM=b && clj2js compile -target repl -src build.clj > .github/Makefile
+	@ export OCAMLRUNPARAM=b && \
+		~/Projects/language/_build/default/bin/main.exe compile -target eval -src build.clj > .github/Makefile
 	@ $(MAKE) -f .github/Makefile
 
 .PHONY: clean
