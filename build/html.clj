@@ -1,4 +1,4 @@
-(ns _ (:require ["../.github/vendor/xml/0.2.0/main" :as xml]))
+(ns _ (:require ["$LY2K_PACKAGES_DIR/xml/0.2.0/main" :as xml]))
 
 (xml/to_string
  [:html

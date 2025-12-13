@@ -1,6 +1,7 @@
-(ns _ (:require ["../src/main" :as m]
-                ["../src/utils" :as u]
-                ["./vendor/edn/main" :as edn]))
+(ns main-test
+  (:require [main :as m]
+            [utils :as u]
+            [edn :as edn]))
 
 (defn- assert_equal [expected actual]
   (if (= (JSON.stringify expected) (JSON.stringify actual))

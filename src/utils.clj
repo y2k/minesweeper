@@ -1,3 +1,5 @@
+(ns utils)
+
 ;; Utils
 
 (defn html_to_string [node]

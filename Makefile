@@ -1,12 +1,13 @@
 .PHONY: test
 test: build
-	@ node .github/bin/test/test.js
+	@ node .github/bin/test/main_test.js
 
 .PHONY: build
 build:
-	@ export OCAMLRUNPARAM=b && \
-		~/Projects/language/_build/default/bin/main.exe compile -target eval -src build.clj > .github/Makefile
+	@ ly2k compile -target eval -src build.clj > .github/Makefile
 	@ $(MAKE) -f .github/Makefile
+	@ ly2k generate -target js > .github/bin/src/prelude.js
+	@ ly2k generate -target js > .github/bin/test/prelude.js
 
 .PHONY: clean
 clean:
