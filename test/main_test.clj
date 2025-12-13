@@ -3,7 +3,7 @@
             [utils :as u]
             [edn :as edn]))
 
-(defn- assert_equal [expected actual]
+(defn- assert-equal [expected actual]
   (if (= (JSON.stringify expected) (JSON.stringify actual))
     (eprintln "Test result: SUCCESS")
     (FIXME "Test result: FAILED\n"
@@ -11,7 +11,7 @@
            "\nnot=\n"
            (edn/to_string actual))))
 
-(assert_equal
+(assert-equal
  {:initialized true
   :field [1 -2 -2 -1 -1 -1
           -1 -1 -1 -1 -1 -2
@@ -24,7 +24,7 @@
    :db (m/make_state)}
   0))
 
-(assert_equal
+(assert-equal
  {:initialized true
   :field [-1 1 -2 -2 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -1 -1 -1 -1 -1 -2 -1 -1 -1 -1 -1 -1]}
  (m/clicked
@@ -34,7 +34,7 @@
 
 (let [x (/ 1736811151123 1000)
       seed (- x (Math.floor x))])
-(assert_equal
+(assert-equal
  [0.23606797284446657
   0.23606797284446657
   0.7360679728444666
