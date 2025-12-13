@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS build
+FROM node:22 AS build
 
 WORKDIR /app
 
@@ -15,15 +15,7 @@ COPY test/ test/
 RUN git clone https://github.com/y2k/packages.git
 ENV LY2K_PACKAGES_DIR=/app/packages
 
-RUN PATH=$PATH:/app && make build
-
-FROM node:22-bullseye AS test
-
-WORKDIR /app
-
-COPY --from=build /app .
-
-RUN make test && rm -rf /app/.github/bin/test
+RUN PATH=$PATH:/app && make test && rm -rf /app/.github/bin/test
 
 FROM scratch
 COPY --from=build /app/.github/bin /build_result
