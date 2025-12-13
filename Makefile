@@ -4,6 +4,7 @@ test: build
 
 .PHONY: build
 build:
+	@ mkdir -p .github/bin
 	@ ly2k compile -target eval -src build.clj > .github/Makefile
 	@ $(MAKE) -f .github/Makefile
 	@ ly2k generate -target js > .github/bin/src/prelude.js
