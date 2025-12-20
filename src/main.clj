@@ -8,6 +8,8 @@
 ;; -5    : флажок поверх пустого места
 ;; 0 - 8 : открытое пустое пространство
 
+(def CELL_MINE -2)
+
 (def BOMB_COUNT 7)
 (def FIELD_WIDTH 6)
 (def FIELD_SIZE (* FIELD_WIDTH FIELD_WIDTH))
