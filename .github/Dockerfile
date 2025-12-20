@@ -18,4 +18,4 @@ ENV LY2K_PACKAGES_DIR=/app/packages
 RUN PATH=$PATH:/app && make test && rm -rf /app/.github/bin/test
 
 FROM scratch
-COPY --from=build /app/.github/bin /build_result
+COPY --from=build /app/.github/bin .
