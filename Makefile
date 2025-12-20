@@ -14,8 +14,8 @@ build:
 clean:
 	@ rm -rf .github/bin
 
-.PHONY: docker
-docker:
+.PHONY: docker_image
+docker_image:
 	@ docker build -f .github/Dockerfile -t y2khub/minesweeper .
 
 .PHONY: web
