@@ -15,4 +15,4 @@ jobs:
         token: ${{ secrets.PAT }}
         repository: y2k/github_page_builder
         event-type: image_updated
-        client-payload: '{"image": "mineswipper"}'
+        client-payload: '{"image": "minesweeper"}'
