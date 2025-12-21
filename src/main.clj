@@ -1,4 +1,5 @@
 (ns main (:require ["./utils" :as u]))
+
 ;; Domain
 
 ;; -1    : неизвестно
